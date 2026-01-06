@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sains News</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: var(--body-bg);
+        margin: 0;
+        padding: 0;
+      }
+      #coordinateForm {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 25px;
+        margin-bottom: 30px;
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-color: #fff;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .slider-container {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slider {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .slide {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        object-fit: cover;
+        margin-bottom: 3%;
+      }
+
+      .buttonnext {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 10px 15px;
+      }
+
+      #prevBtn {
+        left: 10px;
+      }
+
+      #nextBtn {
+        right: 10px;
+      }
+      /* Aturan CSS untuk tampilan seluler (dibawah 768px) */
+      @media (max-width: 768px) {
+        .slide {
+          max-height: 300px; /* Sesuaikan dengan tinggi gambar yang Anda inginkan pada perangkat seluler */
+        }
+
+        .buttonnext {
+          font-size: 10px;
+          padding: 8px 12px;
+        }
+
+        #prevBtn {
+          left: 2px;
+        }
+
+        #nextBtn {
+          right: 2px;
+        }
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+      }
+    </style>
+    <link
+      rel="shortcut icon"
+      href="./images/LogoSainsNews.png"
+      type="image/png"
+    />
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BOXICONS -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-storage.js"></script>
+
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/grid.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <link rel="stylesheet" href="./css/popup.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      var map;
+      var markers = [];
+
+      // Fungsi untuk mengambil data koordinat dari Firestore dan menambahkannya ke peta
+      function initMap() {
+        var mapOptions = {
+          center: { lat: 0.7893, lng: 113.9213 }, // Koordinat pusat peta
+          zoom: 5, // Level zoom
+        };
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        // Mengambil data koordinat dari Firestore dan menambahkannya sebagai marker ke peta
+        db.collection("coordinates")
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              var data = doc.data();
+              var latitude = data.latitude;
+              var longitude = data.longitude;
+
+              // Menambahkan marker ke peta untuk setiap koordinat
+              var marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: "Koordinat",
+              });
+
+              markers.push(marker);
+            });
+          });
+      }
+
+      // Fungsi untuk menambahkan data koordinat ke Firestore
+      function addCoordinate() {
+        var latitude = parseFloat(document.getElementById("latitude").value);
+        var longitude = parseFloat(document.getElementById("longitude").value);
+
+        // Memastikan bahwa nilai yang dimasukkan adalah angka valid
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          // Menambahkan data koordinat ke Firestore
+          db.collection("coordinates")
+            .add({
+              latitude: latitude,
+              longitude: longitude,
+            })
+            .then(function (docRef) {
+              console.log("Document written with ID: ", docRef.id);
+              // Setelah data ditambahkan, perbarui peta dengan menambahkan marker baru
+              var marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: "Koordinat",
+              });
+              markers.push(marker);
+            })
+            .catch(function (error) {
+              console.error("Error adding document: ", error);
+            });
+        } else {
+          alert("Latitude dan Longitude harus berupa angka.");
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  </head>
+
+  <body class="sidebar-expand">
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle">
+          <i class="bx bx-menu"></i>
+        </div>
+        <img src="./images/LogoSainsNews.png" class="img-fluid" alt="Logo">
+        <div class="main-title">Grafik</div>
+      </div>
+      <div class="main-menu-header" id="main-menu">
+        
+        <img src="./images/LogoTagline.png"/>
+        <!-- <a href="./data.html"><span class="sub-menu-header">Grafik</span></a> -->
+        <a href="../index.html"><span class="sub-menu-header">News</span></a>
+        <a href="./threads.html"><span class="sub-menu-header">Threads</span></a>
+        <a href="./laporan.html"><span class="sub-menu-header">Laporan</span></a>
+        <a href="./konsultasilist.html"><span class="sub-menu-header">Ahli</span></a> 
+        <a href="./konsultasi.html"><span class="sub-menu-header">Konsultasi</span></a> 
+        <a href="./opini.html" class="sub-menu-header" style="color:black">Opini</a>
+      </div>
+      <!--Container header-->
+      <div class="d-flex align-items-center" id="imgcontainer">
+        <div class="dropdown d-inline-block mt-12">
+          <button
+            type="button"
+            class="btn header-item waves-effect"
+            id="page-header-user-dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              class="profile-picture"
+              src="./images/profiledefault.png"
+              alt="Header Avatar"
+              id="profile"
+            />
+            <span class="info d-xl-inline-block color-span">
+              <!--collect nama dan email-->
+              <span id="Adminname" class="d-block fs-20 font-w600"></span>
+              <span id="email" class="d-block mt-7"></span>
+            </span>
+            <i class="bx bx-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <!-- item-->
+            
+              <a
+                class="dropdown-item"
+                data-target="#add_project"
+                data-toggle="modal"
+                id="dropProfile"
+                ><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                <button class="buttn">Profile</button></a
+              >
+              <a class="dropdown-item text-danger" id="dropLogout">
+                <i
+                  class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
+                ></i>
+                <button id="logoutbutton" class="buttn">Logout</button></a
+              >
+              <a class="dropdown-item" id="dropLogin" href="../login.html">
+                <i class="bx bx-user font-size-16 align-middle me-1"></i>
+                Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Header -->
+    <!-- start edit account-->
+    <div id="add_project" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Your Account</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="updateAdminForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgprofile" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input
+                      id="AdminnameInput"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div id="gender" class="form-group">
+                    <span>Jenis kelamin</span>
+                    <br />
+                    <br />
+                    <label>
+                      <input type="radio" name="gender" value="male" />
+                      Laki-Laki
+                    </label>
+                    <label>
+                      <input type="radio" name="gender" value="female" />
+                      Perempuan
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button id="buttonsave" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end edit account-->
+    <!-- MAIN CONTENT -->
+    <div class="">
+      <div class="main-content">
+        <div class="panel-grafik">
+          <div class="">
+            <select style="margin-bottom: 20px;" id="yearDropdown" class="btn btn-primary dropdown-toggle">
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+            <button
+              style="
+              margin-bottom: 20px;
+                margin-left: 20px;
+                border-radius: 10px;
+                background-color: #2fa535;
+              "
+              class="btn btn-primary"
+              id="downloadExcelButton"
+            >
+              Download Excel
+            </button>
+          </div>
+          <div>
+          <div class="row">
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Hasil Pendapatan Sawit Indonesia
+              </h5>
+              <canvas id="revenueChart" class="grafik1"></canvas>
+            </div>
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Luas Lahan Sawit di Indonesia
+              </h5>
+              <canvas id="luasChart" class="grafik1"></canvas>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Import Sawit Indonesia
+              </h5>
+              <canvas id="importChart" class="grafik1"></canvas>
+            </div>
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Export Sawit Indonesia
+              </h5>
+              <canvas id="exportChart" class="grafik1"></canvas>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Konsumsi Domestik Sawit
+              </h5>
+              <canvas id="konsumsiChart" class="grafik1"></canvas>
+            </div>
+            <div class="col-12new">
+              <h5 class="text-center mt-5" style="margin-top: 10px">
+                Data Produksi Sawit Indonesia
+              </h5>
+              <canvas id="produksiChart" class="grafik1"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function updateColumnClass() {
+        var column1 = document.querySelector("#revenueChart").parentElement;
+        var column2 = document.querySelector("#luasChart").parentElement;
+        var column3 = document.querySelector("#importChart").parentElement;
+        var column4 = document.querySelector("#exportChart").parentElement;
+        var column5 = document.querySelector("#konsumsiChart").parentElement;
+        var column6 = document.querySelector("#produksiChart").parentElement;
+
+        if (window.innerWidth <= 768) {
+          // Ganti kelas saat lebar layar kurang dari atau sama dengan 768px (misalnya, perangkat seluler)
+          column1.classList.remove("col-6");
+          column2.classList.remove("col-6");
+          column3.classList.remove("col-6");
+          column4.classList.remove("col-6");
+          column5.classList.remove("col-6");
+          column6.classList.remove("col-6");
+          column1.classList.add("col-12");
+          column2.classList.add("col-12");
+          column3.classList.add("col-12");
+          column4.classList.add("col-12");
+          column5.classList.add("col-12");
+          column6.classList.add("col-12");
+        } else {
+          // Ganti kelas saat lebar layar lebih besar dari 768px (misalnya, laptop/desktop)
+          column1.classList.remove("col-12");
+          column2.classList.remove("col-12");
+          column3.classList.remove("col-12");
+          column4.classList.remove("col-12");
+          column5.classList.remove("col-12");
+          column6.classList.remove("col-12");
+          column1.classList.add("col-6");
+          column2.classList.add("col-6");
+          column3.classList.add("col-6");
+          column4.classList.add("col-6");
+          column5.classList.add("col-6");
+          column6.classList.add("col-6");
+        }
+      }
+      // Panggil fungsi saat halaman dimuat dan saat jendela diubah ukurannya
+      window.addEventListener("load", updateColumnClass);
+      window.addEventListener("resize", updateColumnClass);
+    </script>
+    <!-- END MAIN CONTENT -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <script src="./libs/moment/min/moment.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="./libs/peity/jquery.peity.min.js"></script>
+    <script src="./libs/chart.js/Chart.bundle.min.js"></script>
+    <script src="./libs/owl.carousel/owl.carousel.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./libs/apexcharts/apexcharts.js"></script>
+    <script src="./libs/simplebar/simplebar.min.js"></script>
+
+    <!-- APP JS -->
+    <script src="./js/main.js"></script>
+    <script src="./js/shortcode.js"></script>
+    <script src="./js/pages/logout.js"></script>
+    <script src="./js/pages/status.js"></script>
+    <script src="./js/pages/data.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@google-cloud/storage": "^7.0.1",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "daisyui": "^3.7.3"
+  }
+}

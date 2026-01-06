@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Commodity Headlines</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .slider-container {
+        position: relative;
+        overflow: hidden;
+      }
+  
+      .slider {
+        display: flex;
+        transition: transform 0.3s ease-in-out;
+      }
+  
+      .slide {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        object-fit: cover;
+      }
+  
+      .buttonnext {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 10px 15px;
+      }
+      .buttonnext2 {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 10px 15px;
+      }
+  
+      #prevBtn {
+        left: 10px;
+      }
+  
+      #nextBtn {
+        right: 10px;
+      }
+      #poster2 {
+        display: none; /* Sembunyikan elemen #poster2 pada awalnya */
+      }
+  
+      /* CSS for mobile devices (max-width: 768px) */
+      @media (max-width: 768px) {
+        .slide {
+          max-height: 100%;
+          max-width: 100%;
+        }
+  
+        .buttonnext2 {
+          font-size: 10px;
+          padding: 8px 12px;
+        }
+  
+        #prevBtn2 {
+          left: 2px;
+        }
+  
+        #nextBtn2 {
+          right: 2px;
+        }
+  
+        #poster1 {
+          display: none; /* Hide poster 1 for mobile devices */
+        }
+  
+        #poster2 {
+          display: block; /* Show poster 2 for mobile devices */
+        }
+      }
+  
+      /* Media query for screens with a min-width of 769px (typical for laptops and larger screens) */
+    </style>
+    <link
+      rel="shortcut icon"
+      href="./images/LogoSainsNews.png"
+      type="image/png"
+    />
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BOXICONS -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-storage.js"></script>
+    <!-- SCRIPT -->
+    <!-- Plugin -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXx4LpgL2H7akLfLO2BDNQqJH0wCCTHxI&callback=initMap"
+      async
+      defer
+    ></script>
+    <script>
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+
+      var map;
+      var markers = [];
+
+      // Fungsi untuk mengambil data koordinat dari Firestore dan menambahkannya ke peta
+      function initMap() {
+        var mapOptions = {
+          center: { lat: 0.7893, lng: 113.9213 }, // Koordinat pusat peta
+          zoom: 5, // Level zoom
+        };
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        // Mengambil data koordinat dari Firestore dan menambahkannya sebagai marker ke peta
+        db.collection("coordinates")
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              var data = doc.data();
+              var latitude = data.latitude;
+              var longitude = data.longitude;
+
+              // Menambahkan marker ke peta untuk setiap koordinat
+              var marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: "Koordinat",
+              });
+
+              markers.push(marker);
+            });
+          });
+      }
+
+      // Fungsi untuk menambahkan data koordinat ke Firestore
+      function addCoordinate() {
+        var latitude = parseFloat(document.getElementById("latitude").value);
+        var longitude = parseFloat(document.getElementById("longitude").value);
+
+        // Memastikan bahwa nilai yang dimasukkan adalah angka valid
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          // Menambahkan data koordinat ke Firestore
+          db.collection("coordinates")
+            .add({
+              latitude: latitude,
+              longitude: longitude,
+            })
+            .then(function (docRef) {
+              console.log("Document written with ID: ", docRef.id);
+              // Setelah data ditambahkan, perbarui peta dengan menambahkan marker baru
+              var marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: "Koordinat",
+              });
+              markers.push(marker);
+            })
+            .catch(function (error) {
+              console.error("Error adding document: ", error);
+            });
+        } else {
+          alert("Latitude dan Longitude harus berupa angka.");
+        }
+      }
+    </script>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/grid.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <link rel="stylesheet" href="./css/popup.css" />
+  </head>
+
+  <body class="sidebar-expand">
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle" style="margin-right: 5px;">
+          <i class="bx bx-menu"></i>
+        </div>
+        <img src="./images/LogoSainsNews.png" class="img-fluid" alt="Logo">
+        <div class="main-title">News</div>
+      </div>
+      <div class="main-menu-header" id="main-menu">
+        
+        <img src="./images/LogoTagline.png"/>
+        <a href="./aboutUs.html"><span class="sub-menu-header" style="text-align: center;">About Us</span></a>
+        <!-- <a href="./data.html"><span class="sub-menu-header">Grafik</span></a> -->
+        <a href="../index.html"><span class="sub-menu-header" style="text-align: center;">News</span></a>
+        <a href="./event.html"><span class="sub-menu-header" style="text-align: center;">Event</span></a>
+        <a href="./threads.html"><span class="sub-menu-header" style="text-align: center;">Threads</span></a>
+        <a href="./laporan.html"><span class="sub-menu-header" style="text-align: center;">Laporan</span></a>
+        <a href="./konsultasilist.html"><span class="sub-menu-header">Ahli</span></a>
+        <a href="./konsultasi.html"><span class="sub-menu-header">Konsultasi</span></a>
+        <a href="./opini.html" class="sub-menu-header" style="color:black;">Opini</a>
+      </div>
+      <!--Container header-->
+      <div class="d-flex align-items-center" id="imgcontainer">
+        <div class="dropdown d-inline-block mt-12">
+          <button
+            type="button"
+            class="btn header-item waves-effect"
+            id="page-header-user-dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              class="profile-picture"
+              src="./images/profiledefault.png"
+              alt="Header Avatar"
+              id="profile"
+            />
+            <span class="info d-xl-inline-block color-span" style="margin-left: 1px;">
+              <!--collect nama dan email-->
+              <span id="Adminname" class="d-block fs-20 font-w600" style="color: black;"></span>
+              <span id="email" class="d-block mt-7"></span>
+            </span>
+            <i class="bx bx-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <!-- item-->
+            
+              <a
+                class="dropdown-item"
+                data-target="#add_project"
+                data-toggle="modal"
+                id="dropProfile"
+                ><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                <button class="buttn">Profile</button></a
+              >
+              <a class="dropdown-item text-danger" id="dropLogout">
+                <i
+                  class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
+                ></i>
+                <button id="logoutbutton" class="buttn">Logout</button></a
+              >
+              <a class="dropdown-item" id="dropLogin" href="./login.html">
+                <i class="bx bx-user font-size-16 align-middle me-1"></i>
+                Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!-- End Main Header -->
+      <!-- start edit account-->
+      <div id="add_project" class="modal custom-modal fade" role="dialog">
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Your Account</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- foto disini-->
+            <div class="modal-body">
+              <form id="updateAdminForm">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Upload Files</label>
+                      <input id="imgprofile" class="form-control" type="file" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input
+                        id="AdminnameInput"
+                        class="form-control"
+                        value=""
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div id="gender" class="form-group">
+                      <span>Jenis kelamin</span>
+                      <br />
+                      <br />
+                      <label>
+                        <input type="radio" name="gender" value="male" />
+                        Laki-Laki
+                      </label>
+                      <label>
+                        <input type="radio" name="gender" value="female" />
+                        Perempuan
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button id="buttonsave" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end edit account-->
+      <!-- MAIN CONTENT -->
+      <div class="">
+        <div class="main-content dashboard">
+          <div class="row">
+            <div class="col-12">
+              <div id="poster1" class="slider-container">
+                <div class="slider">
+                  <img class="slide" src="./images/4.png" alt="Image 1" />
+                  <img class="slide" src="./images/5.png" alt="Image 2" />
+                  <img class="slide" src="./images/6.png" alt="Image 3" />
+                </div>
+                <button class="buttonnext" id="prevBtn"><</button>
+                <button class="buttonnext" id="nextBtn">></button>
+              </div>
+              <div id="poster2" class="slider-container">
+                <div class="slider">
+                  <img class="slide" src="./images/4(1).png" alt="Image 1" />
+                  <img class="slide" src="./images/5(1).png" alt="Image 2" />
+                  <img class="slide" src="./images/6(1).png" alt="Image 3" />
+                </div>
+                <button class="buttonnext2" id="prevBtn2"><</button>
+                <button class="buttonnext2" id="nextBtn2">></button>
+              </div>
+            </div>           
+            <div>
+              <section class="titleabout">
+                <h2><strong>Redaksi</strong></h2>
+                <p>
+                  Selamat datang di oilpalmnews.com – Sumber Terpercaya untuk
+                  Berita Terkini tentang Industri Kelapa Sawit! Kami adalah
+                  portal berita yang didedikasikan untuk memberikan informasi
+                  terbaru, terpercaya, dan mendalam seputar industri kelapa
+                  sawit di seluruh dunia. Di [Nama Situs/Web], kami memahami
+                  pentingnya industri kelapa sawit dalam ekonomi global dan
+                  keberlanjutan lingkungan. Kami mengambil tanggung jawab untuk
+                  menyajikan berita terkini, analisis mendalam, serta opini dari
+                  para ahli dalam industri ini. Misi kami adalah memberikan
+                  pemahaman yang lebih baik tentang industri kelapa sawit kepada
+                  pembaca kami. Kami menyajikan berita tentang inovasi terbaru,
+                  praktik berkelanjutan, perkembangan pasar, dan isu-isu terkini
+                  yang mempengaruhi industri ini. Kami percaya bahwa dengan
+                  memberikan informasi yang akurat dan berimbang, kami dapat
+                  mendukung perkembangan yang berkelanjutan dan etis dalam
+                  industri kelapa sawit. Tim kami terdiri dari jurnalis terlatih
+                  dan pakar industri yang berkomitmen untuk menyampaikan berita
+                  yang dapat dipercaya dan bermanfaat. Kami juga menyediakan
+                  platform untuk berbagi pengetahuan dan pandangan, memungkinkan
+                  para pembaca kami terlibat dalam dialog konstruktif tentang
+                  masa depan industri kelapa sawit.
+                </p>
+                <p>
+                  Terima kasih atas kunjungan Anda ke [Nama Situs/Web]. Kami
+                  berharap Anda menemukan berita dan informasi yang bermanfaat
+                  di sini. Jangan ragu untuk menghubungi kami jika Anda memiliki
+                  pertanyaan, saran, atau ingin berkontribusi dengan artikel
+                  Anda sendiri. Kami berkomitmen untuk menjaga integritas dan
+                  kualitas informasi yang kami sajikan kepada Anda. Salam, [Tim
+                  Redaksi/Nama Organisasi] [Alamat Email] [Nomor Telepon]
+                  [Alamat Kantor (Opsional)]
+                </p>
+                <img
+                  class="iamgesaboutus"
+                  src="./images/sawit-2_1696409044.jpg"
+                />
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <section class="titledashboard">
+        <h2><strong>Fokus website</strong></h2>
+        <p>
+          Kami mengambil tanggung jawab untuk menyajikan berita terkini, analisis mendalam, serta opini dari para ahli dalam industri ini. Misi kami adalah memberikan pemahaman yang lebih baik tentang industri kelapa sawit kepada pembaca kami. Kami menyajikan berita tentang inovasi terbaru, praktik berkelanjutan, perkembangan pasar, dan isu-isu terkini yang mempengaruhi industri ini.
+        </p>
+        <div class="cards-container">
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_bagusGY-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">Education</h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+            </div>
+          </div>
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_ernayunita-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">Education</h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+            </div>
+          </div>
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_iputp-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">Education</h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="">
+      <section class="titledashboard">
+        <h2><strong>Ahli </strong></h2>
+        <p>
+          Kami mengambil tanggung jawab untuk menyajikan berita terkini,
+          analisis mendalam, serta opini dari para ahli dalam industri ini. Misi
+          kami adalah memberikan pemahaman yang lebih baik tentang industri
+          kelapa sawit kepada pembaca kami. Kami menyajikan berita tentang
+          inovasi terbaru, praktik berkelanjutan, perkembangan pasar, dan
+          isu-isu terkini yang mempengaruhi industri ini.
+        </p>
+        <div class="cards-container">
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_bagusGY-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">Bagus</h2>
+              <p>####</p>
+            </div>
+          </div>
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_ernayunita-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">ernayunita</h2>
+              <p>###</p>
+            </div>
+          </div>
+          <div class="cards w-96 bg-base-100 shadow-xl">
+            <figure class="px-10 pt-10">
+              <img
+                src="./images/iopri_iputp-230x270.jpg"
+                alt="Shoes"
+                class="rounded-xl"
+              />
+            </figure>
+            <div class="card-bodys items-center text-center">
+              <h2 class="cards-title">iput</h2>
+              <p>####</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="">
+      <section class="titleabout">
+        <h2><strong>Kegiatan Sosialisasi</strong></h2>
+      </section>
+    </div>
+    <br />
+    <div class="">
+      <section class="titleabout">
+        <div class="map" id="map" style="width: 100%; height: 500px"></div>
+      </section>
+    </div>
+
+    <!-- END MAIN CONTENT -->
+    <script src="./libs/jquery/jquery.min.js" defer></script>
+    <script src="./libs/moment/min/moment.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <script src="./libs/peity/jquery.peity.min.js" defer></script>
+    <script src="./libs/chart.js/Chart.bundle.min.js" defer></script>
+    <script src="./libs/owl.carousel/owl.carousel.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="./libs/apexcharts/apexcharts.js" defer></script>
+    <script src="./libs/simplebar/simplebar.min.js" defer></script>
+    <!-- APP JS -->
+    <script src="./js/main.js" defer></script>
+    <script src="./js/shortcode.js" defer></script>
+    <script src="./js/pages/dashboard.js" defer></script>
+    <script src="./js/pages/logout.js" defer></script>
+    <script src="./js/pages/removeHtml.js" defer></script>
+    <script src="./js/pages/count.js" defer></script>
+
+  </body>
+</html>

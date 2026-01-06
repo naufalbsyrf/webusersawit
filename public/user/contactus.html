@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script src="path/to/slick-slider.js"></script> <!-- Pastikan Anda memasukkan file JavaScript untuk slider jika belum -->
+    <title id="dynamicTitle">Contact Us - sainsnews</title>
+    <link
+      rel="shortcut icon"
+      href="./images/LogoSainsNews.png"
+      type="image/png"
+    />
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BOXICONS -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-storage.js"></script>
+    <!-- SCRIPT -->
+    <!-- Plugin -->
+    <link
+      rel="stylesheet"
+      href="./libs/owl.carousel/assets/owl.carousel.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Mencegah scrollbar horizontal */
+        position: relative;
+      }
+  
+      #floatingAd img{
+        max-width: 195px;
+        position: fixed;
+        top: 57%;
+        left: 0;
+        transform: translateY(-50%);
+        margin-left: 120px;
+      }
+  
+      #content {
+        padding-left: 200px; /* Untuk memberi ruang pada konten utama agar tidak tertutup oleh iklan */
+      }
+      @media (max-width: 1300px) {
+        #floatingAd img {
+          display: none;
+        }
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Tambahkan Bootstrap JS jika diperlukan -->
+    <script>
+      $(document).ready(function () {
+        $("#mobile-toggle").click(function () {
+          $(".main-menu-header").toggleClass("active");
+        });
+      });
+    </script>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href=".//css/grid.css" />
+    <link rel="stylesheet" href=".//css/styles.css" />
+    <link rel="stylesheet" href=".//css/responsive.css" />
+    <link rel="stylesheet" href=".//css/popup.css" />
+  </head>
+
+  <body class="sidebar-expand">
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle" style="margin-right: 5px;">
+          <i class="bx bx-menu"></i>
+        </div>
+        <img src="./images/LogoSainsNews.png" class="img-fluid" alt="Logo">
+        <div class="main-title">News</div>
+      </div>
+      <div class="main-menu-header" id="main-menu">
+        
+        <img src="./images/LogoTagline.png"/>
+        <!-- <a href="./data.html"><span class="sub-menu-header">Grafik</span></a> -->
+        <a href="../index.html"><span class="sub-menu-header">News</span></a>
+        <a href="./event.html"><span class="sub-menu-header" style="text-align: center;">Event</span></a>
+        <a href="./threads.html"><span class="sub-menu-header">Threads</span></a>
+        <div class="menu-item">
+          <span class="sub-menu-header">Categories</span>
+          <div class="submenu">
+              <a href="../index.html?category=pertanian">Pertanian</a>
+              <a href="../index.html?category=teknologi">Teknologi</a>
+              <a href="../index.html?category=kesehatan">Kesehatan</a>
+              <a href="../index.html?category=pertambangan">Pertambangan</a>
+              <a href="../index.html?category=bisnis">Bisnis</a>
+              <a href="../index.html?category=lingkungan">Lingkungan</a>
+              <a href="../index.html?category=kebudayaan">Kebudayaan</a>
+              <a href="../index.html?category=gaya+hidup">Gaya Hidup</a>
+              <a href="../index.html?category=nasional">Nasional</a>
+              <a href="../index.html?category=sains+global">Sains Global</a>
+              <a href="../index.html?category=energi">Energi</a>
+          </div>
+      </div>
+        <a href="./opini.html" class="sub-menu-header" style="color:black">Opini</a>
+        <a href="./contactus.html" class="sub-menu-header" style="color:black;">Contact Us</a>
+      </div>
+      <div class="menu-header-artikel">
+        <button class="header-artikel" id="btnTerbaru">Terbaru</button>
+        <button class="header-artikel" id="btnTerpopuler">Terpopuler</button>
+      </div>
+      <!--Container header-->
+      <div class="d-flex align-items-center" id="imgcontainer">
+        <div class="dropdown d-inline-block mt-12">
+          <button
+            type="button"
+            class="btn header-item waves-effect"
+            id="page-header-user-dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              class="profile-picture"
+              src="./images/profiledefault.png"
+              alt="Header Avatar"
+              id="profile"
+            />
+            <span class="info d-xl-inline-block color-span" style="margin-left: 1px;">
+              <!--collect nama dan email-->
+              <span id="Adminname" class="d-block fs-20 font-w600" style="color: black;"></span>
+              <span id="email" class="d-block mt-7"></span>
+            </span>
+            <i class="bx bx-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <!-- item-->
+            
+              <a
+                class="dropdown-item"
+                data-target="#add_project"
+                data-toggle="modal"
+                id="dropProfile"
+                ><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                <button class="buttn">Profile</button></a
+              >
+              <a class="dropdown-item text-danger" id="dropLogout">
+                <i
+                  class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
+                ></i>
+                <button id="logoutbutton" class="buttn">Logout</button></a
+              >
+              <a class="dropdown-item" id="dropLogin" href="../login.html">
+                <i class="bx bx-user font-size-16 align-middle me-1"></i>
+                Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Header -->
+    <!-- start edit account-->
+    <div id="add_project" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Your Account</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="updateAdminForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgprofile" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input
+                      id="AdminnameInput"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div id="gender" class="form-group">
+                    <span>Jenis kelamin</span>
+                    <br />
+                    <br />
+                    <label>
+                      <input type="radio" name="gender" value="male" />
+                      Laki-Laki
+                    </label>
+                    <label>
+                      <input type="radio" name="gender" value="female" />
+                      Perempuan
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button id="buttonsave" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end edit account-->
+    <!-- MAIN CONTENT -->
+    <div id="floatingAd">
+      <img src="./images/kiri.png" alt="Floating Ad">
+    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="row">
+          <div class="col-8 col-md-12" id="responsive-column">
+            <div class="iklanUtama">
+              <img src="./images/atas.jpg"/>
+            </div>
+            <div class="kanban-box item-box">
+              <div class="panel">
+                <div class="panel-content">
+                   <!-- List of YouTube Video Articles -->
+                  
+                  <div class="video-slider-wrapper">
+                    <div class="video-list-container">
+                        <div class="video-list" id="slick-slider">
+                            <!-- <div class="video-item">
+                                <iframe width="250" height="150" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-item">
+                                <iframe width="250" height="150" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-item">
+                                <iframe width="250" height="150" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>
+                            </div> -->
+                            <!-- Add more video items as needed -->
+                        </div>
+                    </div>
+                  </div>
+                  <div class="midleIklan">
+                    <img src="./images/tengah.jpg"/>
+                  </div>
+                  <br />
+                  <div class="">
+                    <div class="updatenewsterbaru">
+                      <h1>Redaksi:</h1>
+                      <br>
+                      <!-- <h2>Direktur Redaksi</h2>
+                      <p>Nama Redaktur Redaksi</p>
+
+                      <h2>Dewan Konten</h2>
+                      <p>Nama Dewan Konten</p>
+
+                      <h2>Pemimpin Redaksi</h2>
+                      <p>Nama Pemimpin Redaksi</p>
+
+                      <h2>Wakil Pemimpin Redaksi</h2>
+                      <p>Nama Wakil Pemimpin Redaksi</p>
+
+                      <h2>Komite Etik</h2>
+                      <p>Nama Komite Etik</p> -->
+
+                      <br>
+
+                      <h1>Contact Us:</h1>
+                      <br>
+                      <h2>Telp</h2>
+                      <p>098 7978 989789</p>
+                      <h2>Email</h2>
+                      <p>redaksi.sainsnews@gmail.com</p>
+
+                      
+                    </div>
+                  </div>
+                  <!-- <a href="artikel.html">
+                    <button class="bton">Kembali</button>
+                  </a> -->
+                </div>
+              </div>
+            </div>
+          </div>          
+          <div class="col-4 col-md-12" id="responsive-column2">
+            <!-- Berita Terbaru -->
+            <div class="col-12">
+              <div class="item-box">
+                <div class="updatenews">
+                  <h5>Event Terpopuler :</h5>
+                  <div class="row" id="laporanContainer"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Berita Terbaru -->
+            <div class="sideIklan">
+              <img src="./images/kanan.png"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Popup Iklan -->
+    <!-- <div id="popup" class="popup">
+      <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <img src="./images/popup.jpg" alt="Iklan Popup">
+      </div>
+    </div> -->
+    <!-- Popup Iklan -->
+    <!--POP UP ADD ARTIKEL-->
+    <div id="add_artikel" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Artikel</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="postForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgartikel" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Judul</label>
+                    <input
+                      id="title"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="deskripsi">Deskripsi:</label>
+                    <textarea id="deskripsi" rows="4" cols="50"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                  id="postartikel"
+                  accept="images/png, images/jpeg,images/jpg "
+                  class="btn btn-primary"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+    <!-- APEX CHART -->
+    <script>
+      // Mendapatkan elemen button
+      var btnTerbaru = document.getElementById("btnTerbaru");
+      var btnTerpopuler = document.getElementById("btnTerpopuler");
+    
+      // Menambahkan event listener untuk button Terbaru
+      btnTerbaru.addEventListener("click", function() {
+        // Mengarahkan ke berita terbaru
+        var targetElement = document.getElementById("beritaTerbaruContainer1");
+        var offset = targetElement.offsetTop - 5;
+        window.scrollTo({
+          top: offset,
+          behavior: "smooth"
+        });
+      });
+    
+      // Menambahkan event listener untuk button Terpopuler
+      btnTerpopuler.addEventListener("click", function() {
+        // Mengarahkan ke berita terpopuler
+        window.location.href = "#laporanContainer";
+      });
+    </script>
+    <script>
+      // Fungsi untuk menampilkan atau menyembunyikan slider ketika menyentuh kanban box
+      function toggleVideoSlider() {
+        $('.video-slider-wrapper').slideToggle(); // Menggunakan slideToggle untuk menampilkan/menyembunyikan slider
+      }
+    
+      // Menambahkan event handler untuk sentuhan pada kanban box
+      $('#kanbanBox').on('click', toggleVideoSlider);
+    </script>
+    
+
+    <script src="./libs/jquery/jquery.min.js" defer></script>
+    <script src="./libs/moment/min/moment.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <script src="./libs/peity/jquery.peity.min.js" defer></script>
+    <script src="./libs/chart.js/Chart.bundle.min.js" defer></script>
+    <script src="./libs/owl.carousel/owl.carousel.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="./libs/apexcharts/apexcharts.js" defer></script>
+    <script src="./libs/simplebar/simplebar.min.js" defer></script>
+
+    <!-- APP JS -->
+    <script src="./js/main.js" defer></script>
+    <script src="./js/shortcode.js" defer></script>
+    <script src="./js/pages/logout.js" defer></script>
+    <script src="./js/pages/contactus.js" defer></script>
+  </body>
+</html>

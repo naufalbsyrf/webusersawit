@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "web-user-sawit",
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**/*.html",
+        "destination": "/$1"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAWIT</title>
+    <link
+      rel="shortcut icon"
+      href="./images/OILPALMNEWS LOGO.png"
+      type="image/png"
+    />
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BOXICONS -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-storage.js"></script>
+    <!-- SCRIPT -->
+    <!-- Plugin -->
+    <link
+      rel="stylesheet"
+      href="./libs/owl.carousel/assets/owl.carousel.min.css"
+    />
+
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/grid.css" />
+    <link rel="stylesheet" href="../admin/css/styles.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <link rel="stylesheet" href="./css/popup.css" />
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--body-bg);
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+  <body class="sidebar-expand">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <a href="dashboard.html">
+          <img src="./images/OILPALMNEWS LOGO.png" alt="KDRT" />
+        </a>
+        <div class="sidebar-close" id="sidebar-close">
+          <i class="bx bx-left-arrow-alt"></i>
+        </div>
+      </div>
+      <!-- SIDEBAR MENU -->
+      <div class="simlebar-sc" data-simplebar>
+        <ul class="sidebar-menu tf">
+          <li
+            href="dashboard.html"
+            class="sidebar-menu-dropdown"
+            class="sidebar-submenu"
+          ></li>
+          <li>
+            <a href="dashboard.html">
+              <i class="bx bxs-home"></i>
+              <span>Dasboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="threads.html">
+              <i class="bx bxs-bell"></i>
+              <span>Threads</span>
+            </a>
+          </li>
+          <li>
+            <a href="laporan.html">
+              <i class="bx bxs-dashboard"></i>
+              <span>Laporan</span>
+            </a>
+          </li>
+          <li>
+            <a href="artikel.html">
+              <i class="bx bxs-book"></i>
+              <span>Artikel</span>
+            </a>
+          </li>
+          <li>
+            <a href="konsultasi.html">
+              <i class="bx bxs-message-rounded-detail"></i>
+              <span>Konsultasi</span>
+            </a>
+          </li>
+          <li>
+            <a href="addAcount.html">
+              <i class="bx bxs-message-rounded-detail"></i>
+              <span>Tambah Akun</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a
+              class="darkmode-toggle"
+              id="darkmode-toggle"
+              onclick="switchTheme()"
+            >
+              <div>
+                <i class="bx bx-cog mr-10"></i>
+                <span>darkmode</span>
+              </div>
+
+              <span class="darkmode-switch"></span>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- END SIDEBAR -->
+    <!-- Main Header -->
+
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle">
+          <i class="bx bx-menu"></i>
+        </div>
+        <div class="main-title">Artikel</div>
+      </div>
+      <!--Container header-->
+      <div class="d-flex align-items-center" id="imgcontainer">
+        <div class="dropdown d-inline-block mt-12">
+          <button
+            type="button"
+            class="btn header-item waves-effect"
+            id="page-header-user-dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              class="profile-picture"
+              src="../konselor/images/profiledefault.png"
+              alt="Header Avatar"
+              id="profile"
+            />
+            <span class="pulse-css"></span>
+            <span class="info d-xl-inline-block color-span">
+              <!--collect nama dan email-->
+              <span id="Adminname" class="d-block fs-20 font-w600"></span>
+              <span id="email" class="d-block mt-7"></span>
+            </span>
+            <i class="bx bx-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <!-- item-->
+            <div>
+              <a
+                class="dropdown-item"
+                data-target="#add_project"
+                data-toggle="modal"
+                class="create d-flex"
+                ><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                <button class="buttn">Profile</button></a
+              >
+            </div>
+            <a class="dropdown-item text-danger"
+              ><i
+                class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
+              ></i>
+              <button id="logoutbutton" class="buttn">Logout</button></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Header -->
+    <!-- start edit account-->
+    <div id="add_project" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Your Account</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="updateAdminForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgprofile" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input
+                      id="AdminnameInput"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div id="gender" class="form-group">
+                    <span>Jenis kelamin</span>
+                    <br />
+                    <br />
+                    <label>
+                      <input type="radio" name="gender" value="male" />
+                      Laki-Laki
+                    </label>
+                    <label>
+                      <input type="radio" name="gender" value="female" />
+                      Perempuan
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <button id="buttonsave" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end edit account-->
+    <!-- MAIN CONTENT -->
+
+    <div class="main">
+      <div class="main-content dashboard">
+        <div class="row">
+          <div class="col-12">
+            <div class="col-12">
+              <div class="box card-box">
+                <div class="icon-box bg-color-1">
+                  <div class="icon bg-icon-1">
+                    <i class="bx bxs-bell bx-tada bx-tada"></i>
+                  </div>
+                  <div class="content">
+                    <a href="threads.html" class="title-box"
+                      ><h5>Threads</h5></a
+                    >
+                    <p class="color-1 mb-0 pt-4">
+                      <span id="jumlahthreads"></span>
+                    </p>
+                    <!--ambil data nama-->
+                  </div>
+                </div>
+                <div class="icon-box bg-color-2">
+                  <a href="./konsultasi.html">
+                    <div class="icon bg-icon-2">
+                      <i class="bx bxs-message-rounded"></i>
+                    </div>
+                    <div class="content click-c">
+                      <a href="./konsultasi.html"
+                        ><h5 class="title-box">Konsultasi</h5></a
+                      >
+                      <p class="color-2 mb-0 pt-4">
+                        <span id="jumlahkonsultasi"></span>
+                      </p>
+                      <!--ambil data nama-->
+                    </div>
+                  </a>
+                </div>
+                <div class="icon-box bg-color-3">
+                  <a class="create d-flex" href="laporan.html">
+                    <div class="icon bg-icon-3">
+                      <i class="bx bxs-dashboard"></i>
+                    </div>
+                    <div class="content">
+                      <h5>Laporan</h5>
+                      <p class="color-3 mb-0 pt-4">
+                        <span id="jumlahlaporan"></span>
+                      </p>
+                    </div>
+                  </a>
+                </div>
+                <div class="icon-box bg-color-3">
+                  <a class="create d-flex" href="./artikel.html">
+                    <div class="icon bg-icon-3">
+                      <i class="bx bxs-book"></i>
+                    </div>
+                    <div class="content">
+                      <h5>Artikel</h5>
+                      <p class="color-3 mb-0 pt-4">
+                        <span id="jumlahartikel"></span>
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="btn-add-card">
+              <a
+                class="bx bx-plus"
+                class="dropdown-item font-w500 fs-16"
+                href="#"
+                data-toggle="modal"
+                data-target="#add_artikel"
+                ><i class="fas fa-plus mr-14"></i>Add Artikel</a
+              >
+            </div>
+            <div class="col-12">
+              <div class="kanban-board card mb-0 pd-0">
+                <div class="box-body pd-0">
+                  <div
+                    class="root-container"
+                    class="kanban-cont"
+                    id="laporanContainer"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--POP UP ADD ARTIKEL-->
+    <div id="add_artikel" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Artikel</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="postForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgartikel" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Judul</label>
+                    <input
+                      id="title"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="deskripsi">Deskripsi:</label>
+                    <textarea id="deskripsi" rows="4" cols="50"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                  id="postartikel"
+                  accept="images/png, images/jpeg,images/jpg "
+                  class="btn btn-primary"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+
+    <div class="overlay"></div>
+
+    <!-- APEX CHART -->
+
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <script src="./libs/moment/min/moment.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="./libs/peity/jquery.peity.min.js"></script>
+    <script src="./libs/chart.js/Chart.bundle.min.js"></script>
+    <script src="./libs/owl.carousel/owl.carousel.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./libs/apexcharts/apexcharts.js"></script>
+    <script src="./libs/simplebar/simplebar.min.js"></script>
+
+    <!-- APP JS -->
+    <script src="./js/main.js"></script>
+    <script src="./js/shortcode.js"></script>
+    <script src="./js/pages/logout.js"></script>
+    <script src="./js/pages/addArtikel.js"></script>
+  </body>
+</html>

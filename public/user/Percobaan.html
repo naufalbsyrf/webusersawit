@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sains News</title>
+    <link
+      rel="shortcut icon"
+      href="./images/LogoSainsNews.png"
+      type="image/png"
+    />
+    <!-- GOOGLE FONT -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- BOXICONS -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-storage.js"></script>
+    <!-- Plugin CSS -->
+    <link
+      rel="stylesheet"
+      href="./libs/owl.carousel/assets/owl.carousel.min.css"
+    />
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/grid.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
+    <link rel="stylesheet" href="./css/popup.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body class="sidebar-expand">
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle">
+          <i class="bx bx-menu"></i>
+        </div>
+        <img src="./images/LogoSainsNews.png" class="img-fluid" alt="Logo" />
+        <div class="main-title">Detail Threads</div>
+      </div>
+      <div class="main-menu-header" id="main-menu">
+        <img src="./images/LogoTagline.png" />
+        <a href="../index.html"><span class="sub-menu-header">News</span></a>
+        <a href="./event.html"
+          ><span class="sub-menu-header" style="text-align: center"
+            >Event</span
+          ></a
+        >
+        <a href="./threads.html"
+          ><span class="sub-menu-header">Threads</span></a
+        >
+        <div class="menu-item">
+          <span class="sub-menu-header">Categories</span>
+          <div class="submenu">
+            <a href="../index.html?category=pertanian">Pertanian</a>
+            <a href="../index.html?category=teknologi">Teknologi</a>
+            <a href="../index.html?category=kesehatan">Kesehatan</a>
+            <a href="../index.html?category=pertambangan">Pertambangan</a>
+            <a href="../index.html?category=bisnis">Bisnis</a>
+            <a href="../index.html?category=lingkungan">Lingkungan</a>
+            <a href="../index.html?category=kebudayaan">Kebudayaan</a>
+            <a href="../index.html?category=gaya+hidup">Gaya Hidup</a>
+            <a href="../index.html?category=nasional">Nasional</a>
+            <a href="../index.html?category=sains+global">Sains Global</a>
+            <a href="../index.html?category=energi">Energi</a>
+          </div>
+        </div>
+        <a href="./opini.html" class="sub-menu-header" style="color: black"
+          >Opini</a
+        >
+        <a href="./contactus.html" class="sub-menu-header" style="color: black"
+          >Contact Us</a
+        >
+        <a
+          href="./halamanbaru.html"
+          class="sub-menu-header"
+          style="color: black"
+          >Halaman Baru</a
+        >
+      </div>
+      <!--Container header-->
+      <div class="d-flex align-items-center" id="imgcontainer">
+        <div class="dropdown d-inline-block mt-12">
+          <button
+            type="button"
+            class="btn header-item waves-effect"
+            id="page-header-user-dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              class="profile-picture"
+              src="./images/profiledefault.png"
+              alt="Header Avatar"
+              id="profile"
+            />
+            <span class="info d-xl-inline-block color-span">
+              <span id="Adminname" class="d-block fs-20 font-w600"></span>
+              <span id="email" class="d-block mt-7"></span>
+            </span>
+            <i class="bx bx-chevron-down" style="color: white"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <a
+              class="dropdown-item"
+              data-target="#add_project"
+              data-toggle="modal"
+              id="dropProfile"
+            >
+              <i class="bx bx-user font-size-16 align-middle me-1"></i>
+              <button class="buttn">Profile</button>
+            </a>
+            <a class="dropdown-item text-danger" id="dropLogout">
+              <i
+                class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
+              ></i>
+              <button id="logoutbutton" class="buttn">Logout</button>
+            </a>
+            <a class="dropdown-item" id="dropLogin" href="../login.html">
+              <i class="bx bx-user font-size-16 align-middle me-1"></i>
+              Login
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Header -->
+
+    <!-- start edit account-->
+    <div id="add_project" class="modal custom-modal fade" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Your Account</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- foto disini-->
+          <div class="modal-body">
+            <form id="updateAdminForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Upload Files</label>
+                    <input id="imgprofile" class="form-control" type="file" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input
+                      id="AdminnameInput"
+                      class="form-control"
+                      value=""
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div id="gender" class="form-group">
+                    <span>Gender</span>
+                    <br /><br />
+                    <label>
+                      <input type="radio" name="gender" value="male" />
+                      Male
+                    </label>
+                    <label>
+                      <input type="radio" name="gender" value="female" />
+                      Female
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button id="buttonsave" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- START NEW MAIN CONTENT -->
+
+    <!-- END NEW MAIN CONTENT -->
+
+    <script>
+      // Mendapatkan URL saat ini
+      var currentUrl = window.location.href;
+
+      // Menghapus ekstensi .html
+      var newUrl = currentUrl.replace(".html", "");
+
+      // Mengubah URL di browser tanpa me-refresh halaman
+      window.history.replaceState({}, document.title, newUrl);
+    </script>
+
+    <!-- APEX CHART -->
+    <script src="./libs/jquery/jquery.min.js" defer></script>
+    <script src="./libs/moment/min/moment.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+    <script src="./libs/peity/jquery.peity.min.js" defer></script>
+    <script src="./libs/chart.js/Chart.bundle.min.js" defer></script>
+    <script src="./libs/owl.carousel/owl.carousel.min.js" defer></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="./libs/apexcharts/apexcharts.js" defer></script>
+    <script src="./libs/simplebar/simplebar.min.js" defer></script>
+
+    <!-- APP JS -->
+    <script src="./js/main.js" defer></script>
+    <script src="./js/shortcode.js" defer></script>
+    <script src="./js/pages/logout.js" defer></script>
+    <script src="./js/pages/detailthreads.js" defer></script>
+  </body>
+</html>
